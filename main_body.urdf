@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<robot name="main_body">
+<!-- main block of bot -->
+<link name="body">
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="0.1" iyy="0.1" izz="0.1"/>
+      <origin xyz="0 0 0" />
+    </inertial>
+    <visual>
+      <geometry><box size="0.545 0.213 0.108"/></geometry>
+      <origin xyz="0 0 0" />
+    </visual>
+    <collision>
+      <geometry><box size="0.545 0.213 0.108"/></geometry>
+      <origin xyz="0 0 0"/>
+    </collision>
+    </link>
