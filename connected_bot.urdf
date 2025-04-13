@@ -98,16 +98,16 @@
     </inertial>
   </link>
 
-  <!-- Fibula branch -->
+  <!-- Fibula top right -->
   <link name="fibula_top_right">
     <visual>
       <geometry>
-        <box size="0.15 0.02 0.01"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 Fibula_1.2-5.STL"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <box size="0.15 0.02 0.01"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 Fibula_1.2-5.STL"/>
       </geometry>
     </collision>
     <inertial>
@@ -117,16 +117,34 @@
     </inertial>
   </link>
 
-  <!-- Tibia (main leg link) -->
-  <link name="tibia_top_right">
+  <link name="fibula_top_left">
     <visual>
       <geometry>
-        <box size="0.16 0.02 0.015"/>
+        <mesh filename="body_parts/leg_front_left/Body_assemb - Leg_assembly_top_left-1 fibula_mirrored-1.STL"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <box size="0.16 0.02 0.015"/>
+        <mesh filename="body_parts/leg_front_left/Body_assemb - Leg_assembly_top_left-1 fibula_mirrored-1.STL"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.017"/>
+      <inertia ixx="0.00029" iyy="0.00031" izz="0.00059" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 0 0"/>
+    </inertial>
+  </link>
+
+  <!-- Tibia top right -->
+  <link name="tibia_top_right">
+    <visual>
+      <geometry>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 tibia_scaled 1.2-3.STL"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 tibia_scaled 1.2-3.STL"/>
       </geometry>
     </collision>
     <inertial>
@@ -140,12 +158,12 @@
   <link name="small_link_top_right">
     <visual>
       <geometry>
-        <box size="0.03 0.02 0.005"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 small link 1.2-2.STL"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <box size="0.03 0.02 0.005"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 small link 1.2-2.STL"/>
       </geometry>
     </collision>
     <inertial>
@@ -247,12 +265,12 @@
   <link name="large_link_top_right">
     <visual>
       <geometry>
-        <box size="0.151 0.02 0.018"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 foot 1.2-4.STL"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <box size="0.151 0.02 0.018"/>
+        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 foot 1.2-4.STL"/>
       </geometry>
     </collision>
     <inertial>
