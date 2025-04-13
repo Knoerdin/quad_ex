@@ -136,8 +136,8 @@
       iyz="-2.222e-10"/>
   </inertial>
 </link>
-  <!-- servo extension horn mock 1 -->
-  <link name="servo_extension_horn_mock_1_top_right">
+<!-- servo extension horn mock 1 -->
+<link name="servo_extension_horn_mock_1_top_right">
   <visual>
     <geometry>
       <box size="0.068 0.012 0.006"/>
@@ -159,6 +159,7 @@
       ixz="2.489e-10" 
       iyz="-2.222e-10"/>
   </inertial>
+</link>
 
 <!-- Large linkage -->
   <link name="large_link_top_right">
@@ -189,23 +190,24 @@
     <origin xyz="0.453 0.213 0.121" rpy="0 0 0"/>
   </joint>
 <!-- servo extend mock 2 on servo hous -->
-  <joint name="servo_extend_on_servo_hous" type="revolute">
-    <parent link="servo_housing_top_right"/>
-    <child link="servo_extension_horn_mock_2_top_right"/>
-    <origin xyz="0.03 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" velocity="0"/>
-    <dynamics damping="0.1" friction="0.1"/>
-  </joint>
+<joint name="servo_extend_on_servo_hous_2" type="revolute">
+  <parent link="servo_housing_top_right"/>
+  <child link="servo_extension_horn_mock_2_top_right"/>
+  <origin xyz="0.03 0 0" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+  <limit effort="0" velocity="0"/>
+  <dynamics damping="0.1" friction="0.1"/>
+</joint>
+
 <!-- servo extend mock 1 on servo hous -->
-  <joint name="servo_extend_on_servo_hous" type="revolute">
-    <parent link="servo_housing_top_right"/>
-    <child link="servo_extension_horn_mock_1_top_right"/>
-    <origin xyz="-0.03 0 0" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="0" velocity="0"/>
-    <dynamics damping="0.1" friction="0.1"/>
-  </joint>
+<joint name="servo_extend_on_servo_hous_1" type="revolute">
+  <parent link="servo_housing_top_right"/>
+  <child link="servo_extension_horn_mock_1_top_right"/>
+  <origin xyz="-0.03 0 0" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+  <limit effort="0" velocity="0"/>
+  <dynamics damping="0.1" friction="0.1"/>
+</joint>
 
 <!-- fibula on servo extend mock 2 -->
   <joint name="fibula_on_servo_extend_mock_2" type="revolute">
