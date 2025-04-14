@@ -37,7 +37,7 @@
     <inertial>
       <mass value="0.005"/>
       <inertia ixx="1e-07" iyy="1e-07" izz="2e-07" ixy="0" ixz="0" iyz="0"/>
-      <origin xyz="0 0 0"/>
+      <origin xyz="33 33 33"/>
     </inertial>
   </link>
 
@@ -456,12 +456,84 @@
   <link name="servo_extension_horn_mock_1_top_right">
     <visual>
       <geometry>
-        <box size="0.068 0.012 0.006"/>
+        <mesh filename="body_parts\leg_front_right\serve_extent_3.stl"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <box size="0.068 0.012 0.006"/>
+        <mesh filename="body_parts\leg_front_right\serve_extent_3.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.153 -0.002 0.164"/>
+      <mass value="0.005"/>
+      <inertia 
+        ixx="1.904e-08" 
+        iyy="2.786e-08" 
+        izz="4.608e-08" 
+        ixy="2.050e-08" 
+        ixz="2.489e-10" 
+        iyz="-2.222e-10"/>
+    </inertial>
+  </link>
+
+  <link name="servo_extension_horn_mock_1_top_left">
+    <visual>
+      <geometry>
+        <mesh filename="body_parts\leg_front_left\serve_extent_4.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="body_parts\leg_front_left\serve_extent_4.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.153 -0.002 0.164"/>
+      <mass value="0.005"/>
+      <inertia 
+        ixx="1.904e-08" 
+        iyy="2.786e-08" 
+        izz="4.608e-08" 
+        ixy="2.050e-08" 
+        ixz="2.489e-10" 
+        iyz="-2.222e-10"/>
+    </inertial>
+  </link>
+
+  <link name="servo_extension_horn_mock_1_back_left">
+    <visual>
+      <geometry>
+        <mesh filename="body_parts\leg_back_left\serve_extent_8.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="body_parts\leg_back_left\serve_extent_8.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.153 -0.002 0.164"/>
+      <mass value="0.005"/>
+      <inertia 
+        ixx="1.904e-08" 
+        iyy="2.786e-08" 
+        izz="4.608e-08" 
+        ixy="2.050e-08" 
+        ixz="2.489e-10" 
+        iyz="-2.222e-10"/>
+    </inertial>
+  </link>
+
+  <link name="servo_extension_horn_mock_1_back_right">
+    <visual>
+      <geometry>
+        <mesh filename="body_parts\leg_back_right\serve_extent_7.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="body_parts\leg_back_right\serve_extent_7.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -558,8 +630,68 @@
     </inertial>
   </link>
 
-  <!-- Joints -->
+<!-- Joints -->
 
+<!-- Attach hips to frame -->
+  <joint name="hip_top_right_on_body" type="revolute">
+    <parent link="body"/>
+    <child link="hip_top_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="1" effort="1" velocity="1"/>
+  </joint>
+  <joint name="hip_top_left_on_body" type="revolute">
+    <parent link="body"/>
+    <child link="hip_top_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit upper="1" lower="0" effort="100" velocity="100"/>
+  </joint>
+  <joint name="hip_down_right_on_body" type="revolute">
+    <parent link="body"/>
+    <child link="hip_down_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  <joint name="hip_down_left_on_body" type="revolute">
+    <parent link="body"/>
+    <child link="hip_down_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+<!-- Attacht fibula to hip -->
+  <joint name="fibula_on_hip_top_right" type="revolute">
+    <parent link="hip_top_right"/>
+    <child link="fibula_top_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="1" effort="100" velocity="0"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  <joint name="fibula_on_hip_top_left" type="revolute">
+    <parent link="hip_top_left"/>
+    <child link="fibula_top_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0" velocity="0"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  <joint name="fibula_on_hip_down_left" type="revolute">
+    <parent link="hip_down_left"/>
+    <child link="fibula_down_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0" velocity="0"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  <joint name="fibula_on_hip_down_right" type="revolute">
+    <parent link="hip_down_right"/>
+    <child link="fibula_down_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="0" velocity="0"/>
+    <dynamics damping="0.1" friction="0.1"/>
+  </joint>
+  <!-- Attach tibia to fibula -->
   <!-- Attach servo housing to the body (main root) -->
   <joint name="servo_on_main" type="fixed">
     <parent link="body"/>
