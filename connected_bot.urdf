@@ -10,13 +10,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="body_parts\body\root_skeleton.stl"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Mirrored_Body_Skeleton_Bottom_back-1.stl"/>
       </geometry>
       <origin xyz="0 0 0" />
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\body\root_skeleton.stl"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Mirrored_Body_Skeleton_Bottom_back-1.stl"/>
       </geometry>
       <origin xyz="0 0 0"/>
     </collision>
@@ -26,18 +26,20 @@
   <link name="hip_top_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_front_right\front_right_hip.stl"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Leg_assembly_top_right-1_servo_housing-1.stl"/>
+        <origin xyz="0 0 0"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_front_right\front_right_hip.stl"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Leg_assembly_top_right-1_servo_housing-1.stl"/>
+        <origin xyz="0 0 0"/>
       </geometry>
     </collision>
     <inertial>
       <mass value="0.005"/>
       <inertia ixx="1e-07" iyy="1e-07" izz="2e-07" ixy="0" ixz="0" iyz="0"/>
-      <origin xyz="33 33 33"/>
+      <origin xyz="0 0 0"/>
     </inertial>
   </link>
 
@@ -64,18 +66,17 @@
   <link name="hip_down_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\back_right_hip.stl"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_mirrored_servo_extens.stl"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\back_right_hip.stl"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_mirrored_servo_extens.stl"/>
       </geometry>
     </collision>
     <inertial>
       <mass value="0.005"/>
       <inertia ixx="1e-07" iyy="1e-07" izz="2e-07" ixy="0" ixz="0" iyz="0"/>
-      <origin xyz="0 0 0"/>
     </inertial>
   </link>
 
@@ -102,12 +103,14 @@
   <link name="fibula_top_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 Fibula_1.2-5.STL"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Leg_assembly_top_right-1_Fibula_1.2-5.stl"/>
+        <origin xyz="0 0 0"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts/leg_front_right/Body_assemb - Leg_assembly_top_right-1 Fibula_1.2-5.STL"/>
+        <mesh filename="new_body_parts\V0Body_assemb_-_Leg_assembly_top_right-1_Fibula_1.2-5.stl"/>
+        <origin xyz="0 0 0"/>
       </geometry>
     </collision>
     <inertial>
@@ -156,12 +159,12 @@
   <link name="fibula_down_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 fibula_1.2-5.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_fibula_1.2-5.stl"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 fibula_1.2-5.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_fibula_1.2-5.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -229,12 +232,12 @@
   <link name="tibia_down_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 tibia_scaled 1.2-3.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_tibia_scaled_1.2-3.stl"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 tibia_scaled 1.2-3.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_tibia_scaled_1.2-3.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -302,12 +305,12 @@
   <link name="small_link_down_rigth">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 small link 1.2-2.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_small_link_1.2-2.stl"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\Body_assemb - Leg_assembly_bottom_right-1 small link 1.2-2.STL"/>
+        <mesh filename="body_parts\leg_back_right\partsBody_assemb_-_Leg_assembly_bottom_right-1_small_link_1.2-2.stl"/>
       </geometry>
     </collision>
     <inertial>
@@ -431,12 +434,12 @@
   <link name="servo_extension_horn_mock_2_down_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\serve_extent_5.stl"/>
+        <mesh filename=""/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_back_right\serve_extent_5.stl"/>
+        <mesh filename=""/>
       </geometry>
     </collision>
     <inertial>
@@ -456,12 +459,12 @@
   <link name="servo_extension_horn_mock_1_top_right">
     <visual>
       <geometry>
-        <mesh filename="body_parts\leg_front_right\serve_extent_3.stl"/>
+        <mesh filename=""/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="body_parts\leg_front_right\serve_extent_3.stl"/>
+        <mesh filename=""/>
       </geometry>
     </collision>
     <inertial>
@@ -636,9 +639,9 @@
   <joint name="hip_top_right_on_body" type="revolute">
     <parent link="body"/>
     <child link="hip_top_right"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="170 17 100" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
-    <limit lower="0" upper="1" effort="1" velocity="1"/>
+    <limit lower="0" upper="1.57" effort="1" velocity="1"/>
   </joint>
   <joint name="hip_top_left_on_body" type="revolute">
     <parent link="body"/>
@@ -651,6 +654,8 @@
     <parent link="body"/>
     <child link="hip_down_right"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="0" upper="1" effort="100" velocity="0"/>
   </joint>
   <joint name="hip_down_left_on_body" type="revolute">
     <parent link="body"/>
@@ -662,8 +667,8 @@
   <joint name="fibula_on_hip_top_right" type="revolute">
     <parent link="hip_top_right"/>
     <child link="fibula_top_right"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <origin xyz="-40 -50 30" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
     <limit lower="0" upper="1" effort="100" velocity="0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
@@ -727,6 +732,7 @@
   </joint>
 
   <!-- Connect fibula to servo extension horn mock 2 -->
+  <!--
   <joint name="fibula_on_servo_extend_mock_2" type="revolute">
     <parent link="servo_extension_horn_mock_2_top_right"/>
     <child link="fibula_top_right"/>
@@ -735,7 +741,7 @@
     <limit effort="0" velocity="0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
-
+-->
   <!-- Connect small link to servo extension horn mock 1 -->
   <joint name="small_link_on_servo_extension_mock_1" type="revolute">
     <parent link="servo_extension_horn_mock_1_top_right"/>
