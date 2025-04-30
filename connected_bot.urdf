@@ -633,18 +633,19 @@
 <!-- Joints -->
 
 <!-- Attach hips to frame -->
-  <joint name="hip_top_right_on_body" type="revolute">
+  <joint name="hip_top_right_on_body" type="fixed">
     <parent link="body"/>
     <child link="hip_top_right"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
-    <limit lower="0" upper="1" effort="1" velocity="1"/>
+    <limit lower="-10" upper="10" effort="1" velocity="1"/>
   </joint>
   <joint name="hip_top_left_on_body" type="revolute">
     <parent link="body"/>
     <child link="hip_top_left"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    
+    <axis xyz="1 0 0"/>
     <limit upper="1" lower="0" effort="100" velocity="100"/>
   </joint>
   <joint name="hip_down_right_on_body" type="revolute">
