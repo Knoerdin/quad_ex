@@ -11,7 +11,7 @@ class QuadrupedEnv(gym.Env):
         model_path: str,
         render_mode: str = None,
         max_steps: int = 1000,
-        min_height: float = 0.003,
+        min_height: float = 0.002,
         min_upright_cos: float = 0.5
     ):
         # Load MuJoCo model and data
@@ -60,6 +60,8 @@ class QuadrupedEnv(gym.Env):
         mujoco.mj_step(self.model, self.data)
         mujoco.mj_forward(self.model, self.data)
         self.elapsed_steps += 1
+        self.last_x_pos = 0.0
+        self.dt = self.model.opt.timestep
 
         # Compute observation
         obs = np.concatenate([self.data.qpos, self.data.qvel])
@@ -67,8 +69,8 @@ class QuadrupedEnv(gym.Env):
         # Termination: check height and orientation
         torso_z = float(self.data.qpos[2])
         # Extract rotation matrix for torso body
-        xmat = self.data.xmat[9*self.torso_body_id : 9*(self.torso_body_id+1)]
-        upright_cos = xmat[8]
+        # xmat = self.data.xmat[9*self.torso_body_id : 9*(self.torso_body_id+1)]
+        # upright_cos = xmat[8]
         # local z-axis dot world z-axis = element (2,2) of rotation matrix
         terminated = (torso_z < self.min_height)
         truncated = self.elapsed_steps >= self.max_steps
@@ -84,7 +86,7 @@ class QuadrupedEnv(gym.Env):
 
         # 3) upright posture reward (higher when spine is vertical)
         #    clip at zero so inverted is not “rewarded”
-        posture_reward = max(upright_cos, 0.0)
+        # posture_reward = max(upright_cos, 0.0)
 
         # 4) control cost (penalize large torques)
         ctrl_cost = 1e-3 * np.sum(np.square(action))
@@ -92,12 +94,11 @@ class QuadrupedEnv(gym.Env):
         # 5) optional fall penalty
         fall_penalty = -1.0 if terminated else 0.0
 
-        reward = forward_vel + alive_bonus + 0.1 * posture_reward - ctrl_cost + fall_penalty
+        reward = forward_vel + alive_bonus - ctrl_cost + fall_penalty
 
         info = {
             "torso_z": torso_z,
             "forward_vel": forward_vel,
-            "upright_cos": upright_cos,
             "ctrl_cost": ctrl_cost,
             "reward": reward,
             "terminated": terminated,
