@@ -20,8 +20,8 @@ def train(model_path: str, total_timesteps: int, render_freq: int):
         verbose=1,
         batch_size=256,
         buffer_size=int(1e6),
-        learning_rate=3e-4,
-        tau=0.1,
+        learning_rate=3e-2,
+        tau=0.3,
         gamma=0.99,
         ent_coef="auto",
     )

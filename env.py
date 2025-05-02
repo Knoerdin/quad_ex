@@ -78,7 +78,7 @@ class QuadrupedEnv(gym.Env):
         # —— SHAPED REWARD ——
         # 1) forward progress (along x)
         x_pos = float(self.data.qpos[0])
-        forward_vel = (x_pos - self.last_x_pos) / self.dt
+        forward_vel = (x_pos - self.last_x_pos)
         self.last_x_pos = x_pos
 
         # 2) small alive bonus for not having fallen over
@@ -92,9 +92,9 @@ class QuadrupedEnv(gym.Env):
         ctrl_cost = 1e-3 * np.sum(np.square(action))
 
         # 5) optional fall penalty
-        fall_penalty = -1.0 if terminated else 0.0
+        fall_penalty = -1000.0 if terminated else 0.0
 
-        reward = forward_vel + alive_bonus - ctrl_cost + fall_penalty
+        reward = 3*forward_vel + alive_bonus - ctrl_cost + fall_penalty
 
         info = {
             "torso_z": torso_z,
