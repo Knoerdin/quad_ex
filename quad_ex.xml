@@ -5,7 +5,7 @@
 
   <!-- make the body free to translate & rotate -->
   <worldbody>
-    <body name="base" pos="0 0 0">
+    <body name="base" pos="0 0 0.3">
       <freejoint name="root_joint"/>
 
       <!-- Main torso geom -->
