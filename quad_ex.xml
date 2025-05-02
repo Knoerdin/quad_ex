@@ -1,147 +1,81 @@
 <?xml version="1.0" ?>
-<robot name="simple_quadruped">
+<mujoco model="simple_quadruped">
+  <compiler angle="radian" coordinate="local"/>
+  <option gravity="0 0 -9.81"/>
 
-  <!-- Main Body -->
-  <link name="body">
-    <inertial>
-      <mass value="5.0"/>
-      <inertia ixx="0.1" iyy="0.1" izz="0.1" ixy="0.0" ixz="0.0" iyz="0.0"/>
-      <origin xyz="0 0 0" />
-    </inertial>
-    <visual>
-      <geometry><box size="0.4 0.2 0.1"/></geometry>
-      <origin xyz="0 0 0" />
-    </visual>
-    <collision>
-      <geometry><box size="0.4 0.2 0.1"/></geometry>
-      <origin xyz="0 0 0"/>
-    </collision>
-  </link>
+  <!-- make the body free to translate & rotate -->
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <freejoint name="root_joint"/>
 
-  <!-- === FRONT LEFT LEG === -->
-  <link name="hip_fl">
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0.0" ixz="0.0" iyz="0.0"/>
-      <origin xyz="0 0 0"/>
-    </inertial>
-    <visual>
-      <geometry><box size="0.05 0.05 0.05"/></geometry>
-      <origin xyz="0 0 0"/>
-    </visual>
-    <collision>
-      <geometry><box size="0.05 0.05 0.05"/></geometry>
-      <origin xyz="0 0 0"/>
-    </collision>
-  </link>
-  <joint name="hip_joint_fl" type="fixed">
-    <parent link="body"/>
-    <child link="hip_fl"/>
-    <origin xyz="0.15 0.1 -0.025"/>
-  </joint>
+      <!-- Main torso geom -->
+      <geom name="body_geom" type="box" size="0.2 0.1 0.05" pos="0 0 0"
+            mass="5.0"/>
 
-  <!-- Upper leg segment FL -->
-  <link name="upper_leg_fl">
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0.0" ixz="0.0" iyz="0.0"/>
-      <origin xyz="0 0 -0.05"/>
-    </inertial>
-    <visual>
-      <geometry><cylinder radius="0.02" length="0.1"/></geometry>
-      <origin xyz="0 0 -0.05"/>
-    </visual>
-    <collision>
-      <geometry><cylinder radius="0.02" length="0.1"/></geometry>
-      <origin xyz="0 0 -0.05"/>
-    </collision>
-  </link>
-  <joint name="knee_joint_fl" type="revolute">
-    <parent link="hip_fl"/>
-    <child link="upper_leg_fl"/>
-    <origin xyz="0 0 -0.025"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="1" lower="-1.57" upper="1.57" velocity="1"/>
-  </joint>
+      <!-- FRONT LEFT LEG -->
+      <body name="hip_fl" pos="0.15 0.1 -0.025">
+        <joint name="knee_joint_fl" type="hinge" axis="0 1 0" pos="0 0 0"
+               range="-1.57 1.57" damping="1"/>
+        <geom name="upper_leg_fl" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
 
-  <!-- Lower leg segment FL -->
-  <link name="lower_leg_fl">
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0.0" ixz="0.0" iyz="0.0"/>
-      <origin xyz="0 0 -0.05"/>
-    </inertial>
-    <visual>
-      <geometry><cylinder radius="0.02" length="0.1"/></geometry>
-      <origin xyz="0 0 -0.05"/>
-    </visual>
-    <collision>
-      <geometry><cylinder radius="0.02" length="0.1"/></geometry>
-      <origin xyz="0 0 -0.05"/>
-    </collision>
-  </link>
-  <joint name="ankle_joint_fl" type="revolute">
-    <parent link="upper_leg_fl"/>
-    <child link="lower_leg_fl"/>
-    <origin xyz="0 0 -0.1"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="1" lower="-1.57" upper="1.57" velocity="1"/>
-  </joint>
+        <body name="ankle_fl" pos="0 0 -0.1">
+          <joint name="ankle_joint_fl" type="hinge" axis="0 1 0" pos="0 0 0"
+                 range="-1.57 1.57" damping="1"/>
+          <geom name="lower_leg_fl" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
+        </body>
+      </body>
 
-  <!-- Transmission for FL joints -->
-  <transmission name="trans_knee_fl">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="knee_joint_fl"/>
-    <actuator name="motor_knee_fl">
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="trans_ankle_fl">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="ankle_joint_fl"/>
-    <actuator name="motor_ankle_fl">
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+      <!-- FRONT RIGHT LEG -->
+      <body name="hip_fr" pos="0.15 -0.1 -0.025">
+        <joint name="knee_joint_fr" type="hinge" axis="0 1 0" pos="0 0 0"
+               range="-1.57 1.57" damping="1"/>
+        <geom name="upper_leg_fr" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
 
-  <!-- Repeat for each leg (FR, RL, RR) -->
+        <body name="ankle_fr" pos="0 0 -0.1">
+          <joint name="ankle_joint_fr" type="hinge" axis="0 1 0" pos="0 0 0"
+                 range="-1.57 1.57" damping="1"/>
+          <geom name="lower_leg_fr" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
+        </body>
+      </body>
 
-  <!-- FRONT RIGHT LEG -->
-  <link name="hip_fr">
-    <inertial>
-      <mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
-      <origin xyz="0 0 0"/>
-    </inertial>
-    <visual><geometry><box size="0.05 0.05 0.05"/></geometry></visual>
-    <collision><geometry><box size="0.05 0.05 0.05"/></geometry></collision>
-  </link>
-  <joint name="hip_joint_fr" type="fixed"><parent link="body"/><child link="hip_fr"/><origin xyz="0.15 -0.1 -0.025"/></joint>
+      <!-- REAR LEFT LEG -->
+      <body name="hip_rl" pos="-0.15 0.1 -0.025">
+        <joint name="knee_joint_rl" type="hinge" axis="0 1 0" pos="0 0 0"
+               range="-1.57 1.57" damping="1"/>
+        <geom name="upper_leg_rl" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
 
-  <link name="upper_leg_fr"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="knee_joint_fr" type="revolute"><parent link="hip_fr"/><child link="upper_leg_fr"/><origin xyz="0 0 -0.025"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <link name="lower_leg_fr"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="ankle_joint_fr" type="revolute"><parent link="upper_leg_fr"/><child link="lower_leg_fr"/><origin xyz="0 0 -0.1"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <transmission name="trans_knee_fr"><type>transmission_interface/SimpleTransmission</type><joint name="knee_joint_fr"/><actuator name="motor_knee_fr"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
-  <transmission name="trans_ankle_fr"><type>transmission_interface/SimpleTransmission</type><joint name="ankle_joint_fr"/><actuator name="motor_ankle_fr"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
+        <body name="ankle_rl" pos="0 0 -0.1">
+          <joint name="ankle_joint_rl" type="hinge" axis="0 1 0" pos="0 0 0"
+                 range="-1.57 1.57" damping="1"/>
+          <geom name="lower_leg_rl" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
+        </body>
+      </body>
 
-  <!-- REAR LEFT LEG -->
-  <link name="hip_rl"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 0"/></inertial><visual><geometry><box size="0.05 0.05 0.05"/></geometry></visual><collision><geometry><box size="0.05 0.05 0.05"/></geometry></collision></link>
-  <joint name="hip_joint_rl" type="fixed"><parent link="body"/><child link="hip_rl"/><origin xyz="-0.15 0.1 -0.025"/></joint>
-  <link name="upper_leg_rl"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="knee_joint_rl" type="revolute"><parent link="hip_rl"/><child link="upper_leg_rl"/><origin xyz="0 0 -0.025"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <link name="lower_leg_rl"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="ankle_joint_rl" type="revolute"><parent link="upper_leg_rl"/><child link="lower_leg_rl"/><origin xyz="0 0 -0.1"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <transmission name="trans_knee_rl"><type>transmission_interface/SimpleTransmission</type><joint name="knee_joint_rl"/><actuator name="motor_knee_rl"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
-  <transmission name="trans_ankle_rl"><type>transmission_interface/SimpleTransmission</type><joint name="ankle_joint_rl"/><actuator name="motor_ankle_rl"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
+      <!-- REAR RIGHT LEG -->
+      <body name="hip_rr" pos="-0.15 -0.1 -0.025">
+        <joint name="knee_joint_rr" type="hinge" axis="0 1 0" pos="0 0 0"
+               range="-1.57 1.57" damping="1"/>
+        <geom name="upper_leg_rr" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
 
-  <!-- REAR RIGHT LEG -->
-  <link name="hip_rr"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 0"/></inertial><visual><geometry><box size="0.05 0.05 0.05"/></geometry></visual><collision><geometry><box size="0.05 0.05 0.05"/></geometry></collision></link>
-  <joint name="hip_joint_rr" type="fixed"><parent link="body"/><child link="hip_rr"/><origin xyz="-0.15 -0.1 -0.025"/></joint>
-  <link name="upper_leg_rr"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="knee_joint_rr" type="revolute"><parent link="hip_rr"/><child link="upper_leg_rr"/><origin xyz="0 0 -0.025"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <link name="lower_leg_rr"><inertial><mass value="0.1"/><inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/><origin xyz="0 0 -0.05"/></inertial><visual><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></visual><collision><geometry><cylinder radius="0.02" length="0.1"/></geometry><origin xyz="0 0 -0.05"/></collision></link>
-  <joint name="ankle_joint_rr" type="revolute"><parent link="upper_leg_rr"/><child link="lower_leg_rr"/><origin xyz="0 0 -0.1"/><axis xyz="0 1 0"/><limit effort="1" lower="-1.57" upper="1.57" velocity="1"/></joint>
-  <transmission name="trans_knee_rr"><type>transmission_interface/SimpleTransmission</type><joint name="knee_joint_rr"/><actuator name="motor_knee_rr"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
-  <transmission name="trans_ankle_rr"><type>transmission_interface/SimpleTransmission</type><joint name="ankle_joint_rr"/><actuator name="motor_ankle_rr"><mechanicalReduction>1</mechanicalReduction></actuator></transmission>
+        <body name="ankle_rr" pos="0 0 -0.1">
+          <joint name="ankle_joint_rr" type="hinge" axis="0 1 0" pos="0 0 0"
+                 range="-1.57 1.57" damping="1"/>
+          <geom name="lower_leg_rr" type="cylinder" size="0.02 0.05" pos="0 0 -0.05"/>
+        </body>
+      </body>
 
-</robot>
+    </body>
+  </worldbody>
+
+  <!-- actuators -->
+  <actuator>
+    <motor name="motor_knee_fl"  joint="knee_joint_fl"  gear="1"/>
+    <motor name="motor_ankle_fl" joint="ankle_joint_fl" gear="1"/>
+    <motor name="motor_knee_fr"  joint="knee_joint_fr"  gear="1"/>
+    <motor name="motor_ankle_fr" joint="ankle_joint_fr" gear="1"/>
+    <motor name="motor_knee_rl"  joint="knee_joint_rl"  gear="1"/>
+    <motor name="motor_ankle_rl" joint="ankle_joint_rl" gear="1"/>
+    <motor name="motor_knee_rr"  joint="knee_joint_rr"  gear="1"/>
+    <motor name="motor_ankle_rr" joint="ankle_joint_rr" gear="1"/>
+  </actuator>
+</mujoco>
