@@ -68,19 +68,41 @@ class QuadrupedEnv(gym.Env):
         torso_z = float(self.data.qpos[2])
         # Extract rotation matrix for torso body
         xmat = self.data.xmat[9*self.torso_body_id : 9*(self.torso_body_id+1)]
+        upright_cos = xmat[8]
         # local z-axis dot world z-axis = element (2,2) of rotation matrix
         terminated = (torso_z < self.min_height)
         truncated = self.elapsed_steps >= self.max_steps
 
-        # Simple reward
-        if terminated:
-            reward = float(abs(self.data.qpos[1])+ abs(self.data.qpos[0]) + abs(self.data.qpos[2]))
-            self.reset()
-        elif truncated:
-            reward = float(abs(self.data.qpos[1])+ abs(self.data.qpos[0]) + abs(self.data.qpos[2]))
-        else:
-            reward = float(abs(self.data.qpos[1])+ abs(self.data.qpos[0]) + abs(self.data.qpos[2]))
-        info = {"torso_z": torso_z, 'reward': reward, 'terminated': terminated, 'truncated': truncated}
+        # —— SHAPED REWARD ——
+        # 1) forward progress (along x)
+        x_pos = float(self.data.qpos[0])
+        forward_vel = (x_pos - self.last_x_pos) / self.dt
+        self.last_x_pos = x_pos
+
+        # 2) small alive bonus for not having fallen over
+        alive_bonus = 0.5 if not terminated else 0.0
+
+        # 3) upright posture reward (higher when spine is vertical)
+        #    clip at zero so inverted is not “rewarded”
+        posture_reward = max(upright_cos, 0.0)
+
+        # 4) control cost (penalize large torques)
+        ctrl_cost = 1e-3 * np.sum(np.square(action))
+
+        # 5) optional fall penalty
+        fall_penalty = -1.0 if terminated else 0.0
+
+        reward = forward_vel + alive_bonus + 0.1 * posture_reward - ctrl_cost + fall_penalty
+
+        info = {
+            "torso_z": torso_z,
+            "forward_vel": forward_vel,
+            "upright_cos": upright_cos,
+            "ctrl_cost": ctrl_cost,
+            "reward": reward,
+            "terminated": terminated,
+            "truncated": truncated,
+        }
 
         return obs, reward, terminated, truncated, info
 
