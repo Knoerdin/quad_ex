@@ -6,6 +6,8 @@ import numpy as np
 from stable_baselines3 import SAC
 from stable_baselines3.common.monitor import Monitor
 from env import QuadrupedEnv
+import imageio
+import time
 
 
 def train(model_path: str, total_timesteps: int, render_freq: int):
@@ -20,10 +22,11 @@ def train(model_path: str, total_timesteps: int, render_freq: int):
         verbose=1,
         batch_size=256,
         buffer_size=int(1e6),
-        learning_rate=3e-2,
-        tau=0.3,
+        learning_rate=1e-4,
+        tau=0.1,
         gamma=0.99,
         ent_coef="auto",
+        device="cuda"
     )
 
     # 4) learn
@@ -35,18 +38,51 @@ def train(model_path: str, total_timesteps: int, render_freq: int):
     train_env.close()
     return model
 
-def visualize(model, model_path: str, eval_steps: int, render_mode: str):
+
+def visualize(model, model_path: str, eval_steps: int, render_mode: str = "rgb_array"):
     print("Visualizing …")
     eval_env = QuadrupedEnv(model_path, render_mode=render_mode)
     obs, _ = eval_env.reset()
-    for _ in range(eval_steps):
-        print(f"[Eval] step #{_}")
+    frames = []  # Moved outside loop
+
+    for step in range(eval_steps):
+        print(f"\n[Eval] Step #{step}")
+        
+        # Predict action
         action, _ = model.predict(obs, deterministic=True)
-        obs, _, terminated, truncated, _ = eval_env.step(action)
+        
+        # Add exploration noise
+        noise = np.random.normal(0, 0.1, size=action.shape)
+        action += noise
+        print(f"Action (with noise): {action}")
+        print(f"Action norm: {np.linalg.norm(action):.4f}")
+        
+        # Step environment
+        obs, reward, terminated, truncated, info = eval_env.step(action)
+
+        # Debug info
+        print(f"Reward: {reward:.4f}")
+        print(f"Torso Z: {info.get('torso_z', 'N/A'):.4f}")
+        print(f"Forward velocity: {info.get('forward_vel', 'N/A'):.4f}")
+        print(f"Control cost: {info.get('ctrl_cost', 'N/A'):.4f}")
+        print(f"Terminated: {terminated}, Truncated: {truncated}")
+
+        # Render and store frame
+        frame = eval_env.render()
+        if frame is not None:
+            frames.append(frame)
+
         if terminated or truncated:
-            print("Episode ended")
+            print("Episode ended — resetting environment.")
             obs, _ = eval_env.reset()
-        eval_env.render()
+
+    # Save video/gif
+    if frames:
+        print("Saving GIF to eval_run.gif …")
+        imageio.mimsave("eval_run.gif", frames, fps=30)
+    else:
+        print("No frames captured — check render_mode")
+
     print("Visualization complete")
     eval_env.close()
 

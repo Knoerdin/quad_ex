@@ -9,9 +9,9 @@ class QuadrupedEnv(gym.Env):
     def __init__(
         self,
         model_path: str,
-        render_mode: str = None,
+        render_mode: str = 'rgb_array',
         max_steps: int = 1000,
-        min_height: float = 0.002,
+        min_height: float = 0.000,
         min_upright_cos: float = 0.5
     ):
         # Load MuJoCo model and data
@@ -82,7 +82,7 @@ class QuadrupedEnv(gym.Env):
         self.last_x_pos = x_pos
 
         # 2) small alive bonus for not having fallen over
-        alive_bonus = 0.5 if not terminated else 0.0
+        alive_bonus = 50 if not terminated else 0.0
 
         # 3) upright posture reward (higher when spine is vertical)
         #    clip at zero so inverted is not “rewarded”
@@ -92,9 +92,9 @@ class QuadrupedEnv(gym.Env):
         ctrl_cost = 1e-3 * np.sum(np.square(action))
 
         # 5) optional fall penalty
-        fall_penalty = -1000.0 if terminated else 0.0
+        fall_penalty = -100.0 if terminated else 0.0
 
-        reward = 3*forward_vel + alive_bonus - ctrl_cost + fall_penalty
+        reward = forward_vel + alive_bonus - ctrl_cost + fall_penalty
 
         info = {
             "torso_z": torso_z,
