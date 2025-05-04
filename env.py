@@ -12,8 +12,8 @@ class QuadrupedEnv(gym.Env):
         self,
         model_path: str,
         render_mode: str = None,
-        max_steps: int = 1000,
-        min_height: float = 0.12,
+        max_steps: int = 3000,
+        min_height: float = 0.14,
     ):
         # --- Load ---
         self.model = mujoco.MjModel.from_xml_path(model_path)
@@ -67,17 +67,20 @@ class QuadrupedEnv(gym.Env):
         # —— SHAPED REWARD ——
         # 1) forward progress (along x)
         x_pos       = float(self.data.qpos[0])
-        forward_vel = (x_pos - self.last_x_pos)
+        forward_vel = 50000* (x_pos - self.last_x_pos)
         self.last_x_pos = x_pos
 
         # 2) small alive bonus
-        alive_bonus = 50.0 if not terminated else 0.0
+        alive_bonus = 5.0 if not terminated else 0.0
 
         # 3) control cost
         ctrl_cost = 1e-3 * np.sum(np.square(action))
 
         # 4) optional fall penalty
-        fall_penalty = -100.0 if terminated else 0.0
+        fall_penalty = -10.0 if terminated else 0.0
+        # store reward info in monitor.csv
+
+        # print(f"torso_z: {torso_z:.3f}, forward_vel: {forward_vel:.3f}, alive_bonus: {alive_bonus:.3f}, ctrl_cost: {ctrl_cost:.3f}, fall_penalty: {fall_penalty:.3f}")
         reward = (forward_vel + alive_bonus - ctrl_cost + fall_penalty)
 
         info = {
@@ -108,7 +111,7 @@ class QuadrupedEnv(gym.Env):
             mujoco.mj_forward(self.model, self.data)
             self.viewer.sync()
             time.sleep(1.0 / self.metadata["render_fps"])
-            
+
         elif self.render_mode == "rgb_array":
             mujoco.mj_forward(self.model, self.data)
             self.renderer.update_scene(self.data)
