@@ -75,7 +75,8 @@ if __name__ == "__main__":
 
     if args.eval_only:
         model = SAC.load("sac_tesbot")
-    else:
+    elif args.training:
         model = train(args.model_path, args.total_timesteps)
-
-    visualize(model, args.model_path, args.eval_steps, render_mode=args.render)
+    elif args.render:
+        model = train(args.model_path, args.total_timesteps)
+        visualize(model, args.model_path, args.eval_steps, render_mode=args.render)

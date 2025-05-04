@@ -3,6 +3,7 @@ import gymnasium as gym
 import numpy as np
 import mujoco
 import mujoco.viewer
+import time
 
 class QuadrupedEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 30}
@@ -12,7 +13,7 @@ class QuadrupedEnv(gym.Env):
         model_path: str,
         render_mode: str = None,
         max_steps: int = 1000,
-        min_height: float = 0.002,
+        min_height: float = 0.12,
     ):
         # --- Load ---
         self.model = mujoco.MjModel.from_xml_path(model_path)
@@ -34,7 +35,6 @@ class QuadrupedEnv(gym.Env):
         self.min_height   = min_height
         self.elapsed_steps = 0
         self.last_x_pos   = 0.0
-        self.dt           = self.model.opt.timestep
 
         # --- Rendering ---
         assert render_mode in (None, "human", "rgb_array"), f"bad render_mode {render_mode}"
@@ -42,10 +42,7 @@ class QuadrupedEnv(gym.Env):
         self.viewer      = None
         self.renderer    = None
 
-        if render_mode == "human":
-            # launch once so viewer is never None
-            self.viewer = mujoco.viewer.launch(self.model, self.data)
-        elif render_mode == "rgb_array":
+        if render_mode == "rgb_array":
             # off-screen only needs the model
             self.renderer = mujoco.Renderer(self.model)
 
@@ -59,9 +56,6 @@ class QuadrupedEnv(gym.Env):
         mujoco.mj_forward(self.model, self.data)
         self.elapsed_steps += 1
 
-        # get dt for velocity calc
-        self.dt = self.model.opt.timestep
-
         # Compute observation
         obs = np.concatenate([self.data.qpos, self.data.qvel])
 
@@ -73,7 +67,7 @@ class QuadrupedEnv(gym.Env):
         # —— SHAPED REWARD ——
         # 1) forward progress (along x)
         x_pos       = float(self.data.qpos[0])
-        forward_vel = (x_pos - self.last_x_pos) / self.dt
+        forward_vel = (x_pos - self.last_x_pos)
         self.last_x_pos = x_pos
 
         # 2) small alive bonus
@@ -84,8 +78,7 @@ class QuadrupedEnv(gym.Env):
 
         # 4) optional fall penalty
         fall_penalty = -100.0 if terminated else 0.0
-
-        reward = forward_vel + alive_bonus - ctrl_cost + fall_penalty
+        reward = (forward_vel + alive_bonus - ctrl_cost + fall_penalty)
 
         info = {
             "torso_z": torso_z,
@@ -109,10 +102,13 @@ class QuadrupedEnv(gym.Env):
 
     def render(self):
         if self.render_mode == "human":
+            if self.viewer is None:
+            # first call to render → open the window now
+                self.viewer = mujoco.viewer.launch(self.model, self.data)
             mujoco.mj_forward(self.model, self.data)
             self.viewer.sync()
-            return None
-
+            time.sleep(1.0 / self.metadata["render_fps"])
+            
         elif self.render_mode == "rgb_array":
             mujoco.mj_forward(self.model, self.data)
             self.renderer.update_scene(self.data)
