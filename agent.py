@@ -6,6 +6,7 @@ from stable_baselines3 import SAC
 from stable_baselines3.common.monitor import Monitor
 from env import QuadrupedEnv
 from callbacks import StepLoggingCallback
+import torch
 
 def train(model_path: str, total_timesteps: int):
     env = QuadrupedEnv(model_path, render_mode=None)
@@ -19,7 +20,9 @@ def train(model_path: str, total_timesteps: int):
         tau=0.01,
         gamma=0.99,
         ent_coef="auto",
+        device="cuda" if torch.cuda.is_available() else "cpu",
     )
+    print(f"Using device: {model.device}")
     cb = StepLoggingCallback(out_csv="logs/step_log.csv")
     model.learn(total_timesteps=total_timesteps, callback=cb)
     env.close()
