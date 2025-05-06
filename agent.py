@@ -18,6 +18,7 @@ def train(model_path: str, total_timesteps: int):
         tau=0.01,
         gamma=0.99,
         ent_coef="auto",
+        device="cuda",
     )
     model.learn(total_timesteps=total_timesteps)
     env.close()
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train & visualize SAC on Quadruped")
     parser.add_argument("--model-path",     type=str, default="quad_ex.xml")
     parser.add_argument("--total-timesteps",type=int, default=50_000)
-    parser.add_argument("--eval-steps",     type=int, default=1_000)
+    parser.add_argument("--eval-steps",     type=int, default=30_000)
     parser.add_argument("--eval-only",      action="store_true")
     parser.add_argument(
         "--render",
@@ -75,6 +76,7 @@ if __name__ == "__main__":
 
     if args.eval_only:
         model = SAC.load("sac_tesbot")
+        visualize(model, args.model_path, args.eval_steps, render_mode='rgb_array')
     elif args.training:
         model = train(args.model_path, args.total_timesteps)
     elif args.render:

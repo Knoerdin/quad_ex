@@ -62,23 +62,30 @@ class QuadrupedEnv(gym.Env):
         # Termination: check height
         torso_z   = float(self.data.qpos[2])
         terminated = (torso_z < self.min_height)
-        truncated  = (self.elapsed_steps >= self.max_steps)
+        # truncated  = (self.elapsed_steps >= self.max_steps)
 
         # —— SHAPED REWARD ——
-        # 1) forward progress (along x)
-        x_pos       = float(self.data.qpos[0])
-        forward_vel = (x_pos - self.last_x_pos)
+        x_pos = float(self.data.qpos[0])
+        forward_vel = (x_pos - self.last_x_pos) # Normalize by time step
         self.last_x_pos = x_pos
 
-        # 2) small alive bonus
-        alive_bonus = 50.0 if not terminated else 0.0
+        # Basic components
+        alive_bonus = 1.0 if not terminated else 0.0  # Normalize
+        ctrl_cost = 1e-2 * np.square(action).sum()
+        fall_penalty = -10.0 if terminated else 0.0
 
-        # 3) control cost
-        ctrl_cost = 1e-3 * np.sum(np.square(action))
+        # Add orientation and uprightness terms
+        up_vector = self.data.geom_xmat[0, 2]  # Assumes z-up, check if this fits your model
+        upright_bonus = up_vector  # Between -1 and 1, max when upright
 
-        # 4) optional fall penalty
-        fall_penalty = -100.0 if terminated else 0.0
-        reward = (forward_vel + alive_bonus - ctrl_cost + fall_penalty)
+        reward = (
+            2.0 * forward_vel        # Encourage walking forward
+            - 0.1 * ctrl_cost        # Penalize high-effort actions
+            + 1 * upright_bonus    # Bonus for staying upright
+            + 1.0 * alive_bonus      # Constant reward for not dying
+            + fall_penalty           # Harsh penalty for falling
+        )
+
 
         info = {
             "torso_z": torso_z,
@@ -88,9 +95,9 @@ class QuadrupedEnv(gym.Env):
             "fall_penalty": fall_penalty,
             "reward": reward,
             "terminated": terminated,
-            "truncated": truncated,
+            "truncated": False,
         }
-        return obs, reward, terminated, truncated, info
+        return obs, reward, terminated, False, info
 
     def reset(self, **kwargs):
         mujoco.mj_resetData(self.model, self.data)
