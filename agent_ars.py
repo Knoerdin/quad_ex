@@ -11,17 +11,10 @@ import torch
 
 def train(model_path: str, total_timesteps: int):
     env = QuadrupedEnv(model_path, render_mode=None)
-    model = SAC(
+    model = ARS(
         policy="MlpPolicy",
         env=env,
-        verbose=1,
-        batch_size=256,
-        buffer_size=int(1e6),
-        learning_rate=3e-3,
-        tau=0.01,
-        gamma=0.99,
-        ent_coef="auto",
-        device="cuda" if torch.cuda.is_available() else "cpu",
+        learning_rate=3e-3
     )
     print(f"Using device: {model.device}")
     cb = StepLoggingCallback(out_csv="logs/step_log.csv")
@@ -80,7 +73,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.eval_only:
-        model = SAC.load("sac_tesbot")
+        model = ARS.load("sac_tesbot")
         visualize(model, args.model_path, args.eval_steps, render_mode=args.render)
     elif args.training:
         model = train(args.model_path, args.total_timesteps)
