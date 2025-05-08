@@ -27,8 +27,11 @@ def train(model_path: str, total_timesteps: int):
     model.save("ARS_quadex")
     return model
 
-def visualize(model, model_path: str, eval_steps: int, render_mode: str):
-    env = QuadrupedEnv(model_path, render_mode=render_mode)
+def visualize(model, model_path: str, eval_steps: int, render_mode: str, preset: bool = False):
+    if preset:
+        env = gym.make('Ant-v5', render_mode=render_mode)
+    else:
+        env = QuadrupedEnv(model_path, render_mode=render_mode)
     obs, _ = env.reset()
     frames = []
 
@@ -78,8 +81,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.eval_only:
-        model = ARS.load("ARS_quadex")
-        visualize(model, args.model_path, args.eval_steps, render_mode=args.render)
+        model = ARS.load("ARS_Ant-v5")
+        visualize(model, args.model_path, args.eval_steps, render_mode=args.render, preset=True)
     elif args.training:
         model = train(args.model_path, args.total_timesteps)
     elif args.use_preset:
@@ -96,7 +99,7 @@ if __name__ == "__main__":
         model.learn(total_timesteps=args.total_timesteps, log_interval=4, callback=cb)
         env.close()
         model.save("ARS_Ant-v5")
-        visualize(model, 'Ant-v5', args.eval_steps, render_mode=args.render)
+        visualize(model, args.model_path, args.eval_steps, render_mode=args.render, preset=True)
     elif args.render:
         model = train(args.model_path, args.total_timesteps)
         visualize(model, args.model_path, args.eval_steps, render_mode=args.render)
